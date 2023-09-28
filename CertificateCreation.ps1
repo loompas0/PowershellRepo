@@ -1,10 +1,11 @@
 # Manipulate self signed certificate in PowerShell
 
 # Use some Variables to make the code clear
-$store = "cert:\CurrentUser\My"
+$store = "cert:\CurrentUser\My" #location on the certificate in my windows local machine
 $params = @{
     CertStoreLocation = $store
     Subject = "CN=Loompas0"
+    FriendlyName = "Loompas0" #Add a friendly name for better comprehension
     KeyLength = 2048
     KeyAlgorithm = "RSA" 
     KeyUsage = "DataEncipherment"
@@ -17,8 +18,15 @@ $params = @{
 # First create a Certificate and store it to default store
 $LoompasCert=New-SelfSignedCertificate @params
 
+# Create a path  to my newly created certificate
+$LoompasPath = $store+'\'+$LoompasCert.Thumbprint
 # list all certs 
+Write-Host "All local certificates"
 Get-ChildItem -path $store
+#List My cert
+Write-Host "My newly created certificate"
+Get-ChildItem -path $LoompasPath
+# ls cert:\CurrentUser\My #Another way to list all certificates
 
 # Exporting/Importing certificate
 
@@ -29,7 +37,7 @@ $PublicKey = "./Loompas0.cer"
 # Export private key as PFX certificate, to use those Keys on different machine/user
 Export-PfxCertificate -FilePath $PrivateKey -Cert $LoompasCert -Password $Passwd
 
-# Export Public key, to share with other users
+# Export Public key as CER certificate, to share with other users
 Export-Certificate -FilePath $PublicKey -Cert $LoompasCert
 
 # Lets try to use that 
@@ -45,8 +53,8 @@ Write-Host "Decrypted message:" -ForegroundColor Green
 Write-Host $clearText -ForegroundColor Yellow
 
 
-# remove all certificate created before
-Remove-Item -Path $store/* 
+# remove my certificate created before
+remove-Item -path $LoompasPath
 
 <#
 
