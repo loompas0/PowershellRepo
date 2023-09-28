@@ -31,6 +31,10 @@ Get-ChildItem -path $LoompasPath
 # Exporting/Importing certificate
 
 $Passwd = ConvertTo-SecureString -String "Strasbourg0" -Force -AsPlainText 
+# $ZertoPassword = Read-Host "Enter Zerto password" -AsSecureString
+# Write-Output $ZertoPassword
+# $plainPwd =[Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($ZertoPassword))
+# Write-Output $plainPwd
 $PrivateKey = "./Loompas0.pfx"
 $PublicKey = "./Loompas0.cer"
 
